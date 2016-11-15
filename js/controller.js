@@ -1,6 +1,6 @@
 (function (angular) {
 	angular.module("todoApp")
-		.controller("todocTrl",["$scope","TodoService",function ($scope,TodoService) {
+		.controller("todocTrl",["$scope","TodoService","$location",function ($scope,TodoService,$location) {
 			$scope.title="任务项";
 			$scope.todos=TodoService.getTodos();
 			$scope.text="";
@@ -22,6 +22,23 @@
 			$scope.clear=function () {
 				$scope.todos=TodoService.clear();
 			}
+			$scope.$location=$location;
+			$scope.$watch("$location.url()",function (newValue,oldValue) {
+				switch (newValue){
+					case "/":
+						$scope.todoFilter={};
+						break;
+					case "/active":
+						$scope.todoFilter.completed=false;
+						break;
+					case "/completed":
+						$scope.todoFilter.completed=true;
+						break;
+					default:
+						$scope.todoFilter={};
+				}
+			})
+
 		}])
 })(angular)
 
